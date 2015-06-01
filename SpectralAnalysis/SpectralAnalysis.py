@@ -95,29 +95,29 @@ t_lt.extractTwoPaths()
 g1 = t_lt.igraphFirstOrder()
 
 visual_style = {}
-visual_style["edge_width"] = [np.log(x)/4 for x in g1.es()["weight"]]
+visual_style["edge_width"] = [np.log(x)/2 for x in g1.es()["weight"]]
 visual_style["vertex_color"] = "lightblue"
 visual_style["edge_curved"] = .5
 visual_style["edge_arrow_size"] = 0.4
 visual_style["vertex_size"] = 15
-visual_style["layout"] = g1.layout_auto()
+visual_style["layout"] = g1.layout_kamada_kawai()
 
 igraph.plot(g1, 'LT_g1.png', **visual_style)
 igraph.plot(g1, 'LT_g1.pdf', **visual_style)
 
 # Export video of diffusion dynamics
-tn.exportDiffusionMovieFramesFirstOrder(t_lt, 'frames/LT_diffusion_t2', visual_style, steps = 200, initial_index=0, model='SECOND')
-tn.exportDiffusionMovieFramesFirstOrder(t_lt, 'frames/LT_diffusion_t1', visual_style, steps = 200, initial_index=0, model='NULL')
+tn.exportDiffusionVideo(t_lt, 'LT_diffusion_t2.mp4', visual_style, steps = 200, initial_index=0, model='SECOND')
+tn.exportDiffusionVideo(t_lt, 'LT_diffusion_t1.mp4', visual_style, steps = 200, initial_index=0, model='NULL')
 
 # Export side-by-side comparison
 tn.exportDiffusionComparisonVideo(t_lt, 'LT_diffusion_comparison.mp4', visual_style, steps = 200, initial_index=0)
 
 # Export video of empirical and shuffled temporal evolution
 visual_style["vertex_color"] = "lightblue"
-t_lt.exportMovieFrames('frames/LT', visual_style, realtime=False, maxSteps=400)
+t_lt.exportMovie('LT_temporal.mp4', visual_style, realtime=False, maxSteps=400)
 
 shuffled = t_lt.ShuffleEdges()
-shuffled.exportMovieFrames('frames/LT_shuffled', visual_style, realtime=False, maxSteps=400)
+shuffled.exportMovie('LT_shuffled_temporal.mp4', visual_style, realtime=False, maxSteps=400)
 
 # Plot second-order networks
 g2n = t_lt.igraphSecondOrderNull()
@@ -283,24 +283,25 @@ t_em.extractTwoPaths()
 g1 = t_em.igraphFirstOrder()
 
 visual_style = {}
-visual_style["bbox"] = (900, 900)
-visual_style["edge_width"] = [np.log(x)/4 for x in g1.es()["weight"]]
+visual_style["edge_width"] = [np.log(x)/2 for x in g1.es()["weight"]]
 visual_style["vertex_color"] = "lightblue"
 visual_style["vertex_label"] = g1.vs["name"]
-visual_style["edge_curved"] = .5
-visual_style["edge_arrow_size"] = 0.2
-visual_style["vertex_size"] = 25
-visual_style["layout"] = g1.layout_auto()
+visual_style["edge_curved"] = .2
+visual_style["edge_arrow_size"] = 0.5
+visual_style["vertex_size"] = 20
+visual_style["vertex_label_size"] = 10
+visual_style["layout"] = g1.layout_kamada_kawai()
 igraph.plot(g1, 'EM_g1.png', **visual_style)
 igraph.plot(g1, 'EM_g1.pdf', **visual_style)
 
 # Export diffusion videos
-tn.exportDiffusionMovieFramesFirstOrder(t_em, 'frames/EM_diffusion_t2', visual_style, steps = 200, initial_index=0, model='SECOND')
-tn.exportDiffusionMovieFramesFirstOrder(t_em, 'frames/EM_diffusion_t1', visual_style, steps = 200, initial_index=0, model='NULL')
+tn.exportDiffusionVideo(t_em, 'EM_diffusion_t2.mp4', visual_style, steps = 200, initial_index=0, model='SECOND')
+tn.exportDiffusionVideo(t_em, 'EM_diffusion_t1.mp4', visual_style, steps = 200, initial_index=0, model='NULL')
 
 # Plot temporal evolution
-t.exportMovieFrames('frames/EM', visual_style, realtime=False)
-t.exportMovieFrames('frames/EM_bursts', visual_style, realtime=True)
+visual_style["vertex_color"] = "lightblue"
+t_em.exportMovie('EM_temporal.mp4', visual_style, realtime=False)
+t_em.exportMovie('EM_temporal_bursts.mp4', visual_style, realtime=True)
 
 # Plot second-order networks
 g2 = t_em.igraphSecondOrder()
