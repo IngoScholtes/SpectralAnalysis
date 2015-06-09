@@ -183,11 +183,11 @@ t_an.extractTwoPaths()
 g1 = t_an.igraphFirstOrder()
 
 visual_style = {}
-visual_style["edge_width"] = [np.log(x)/4 for x in g1.es()["weight"]]
+visual_style["edge_width"] = [np.log(x) for x in g1.es()["weight"]]
 visual_style["vertex_color"] = "lightblue"
 visual_style["edge_curved"] = .2
-visual_style["edge_arrow_size"] = 0.4
-visual_style["vertex_size"] = 10
+visual_style["edge_arrow_size"] = 0.5
+visual_style["vertex_size"] = 25
 visual_style["layout"] = g1.layout_auto()
 
 igraph.plot(g1, 'AN_g1.png', **visual_style)
@@ -205,8 +205,10 @@ visual_style["vertex_color"] = "lightblue"
 t_an.exportMovieFrames('frames/AN', visual_style, realtime=False, maxSteps=400)
 t_an.exportMovieFrames('frames/AN_bursts', visual_style, realtime=True, maxSteps=400)
 
+
+t_an.exportMovie('AN_temporal.mp4', visual_style, realtime=False, maxSteps=400)
 shuffled = t_an.ShuffleEdges()
-shuffled.exportMovieFrames('frames/AN_shuffled', visual_style, realtime=False, maxSteps=400)
+shuffled.exportMovie('AN_shuffled_temporal.mp4', visual_style, realtime=False, maxSteps=400)
 
 # Plot second-order networks
 g2n = t_an.igraphSecondOrderNull()
@@ -332,7 +334,7 @@ t_sd = tn.TemporalNetwork.readFile('../../pyTempNetDemo/data/sigma-0_75.trigram'
 g2_su = t_su.igraphSecondOrder()
 visual_style = {}
 visual_style["layout"] = g2_su.layout_kamada_kawai()
-visual_style["edge_width"] = [x*5 for x in g2_su.es()["weight"]]
+visual_style["edge_width"] = [(x*5)**2 for x in g2_su.es()["weight"]]
 visual_style["edge_arrow_size"] = 0.2
 visual_style["edge_curved"] = 0.25
 visual_style["vertex_color"] = "lightblue"
@@ -340,11 +342,11 @@ visual_style["vertex_size"] = 10
 igraph.plot(g2_su, 'Model_su_g2.pdf', **visual_style)
 
 g2_sd = t_sd.igraphSecondOrder()
-visual_style["edge_width"] = [x*5 for x in g2_sd.es()["weight"]]
+visual_style["edge_width"] = [(x*5)**1.5 for x in g2_sd.es()["weight"]]
 igraph.plot(g2_sd, 'Model_sd_g2.pdf', **visual_style)
 
 g2_sd_null = t_sd.igraphSecondOrderNull()
-visual_style["edge_width"] = [x*50 for x in g2_sd_null.es()["weight"]]
+visual_style["edge_width"] = [x*300 for x in g2_sd_null.es()["weight"]]
 igraph.plot(g2_sd_null, 'Model_null_g2.pdf', **visual_style)
 
 
@@ -360,9 +362,12 @@ visual_style["edge_curved"] = .25
 igraph.plot(g1.as_undirected(), 'Model_g1.pdf', **visual_style)
 
 # Export diffusion videos
-tn.exportDiffusionMovieFramesFirstOrder(t_su, 'frames/Model_075_diffusion_t2', visual_style, steps = 200, initial_index=50, model='SECOND')
-tn.exportDiffusionMovieFramesFirstOrder(t_su, 'frames/Model_075_diffusion_t1', visual_style, steps = 200, initial_index=50, model='NULL')
-tn.exportDiffusionMovieFramesFirstOrder(t_sd, 'frames/Model_-075_diffusion_t2', visual_style, steps = 200, initial_index=50, model='SECOND')
+tn.exportDiffusionVideo(t_su, 'Model_su_diffusion.mp4', visual_style, steps = 200, initial_index=1)
+tn.exportDiffusionVideo(t_sd, 'Model_sd_diffusion.mp4', visual_style, steps = 200, initial_index=1)
+tn.exportDiffusionVideo(t_sd, 'Model_null_diffusion.mp4', visual_style, steps = 200, initial_index=75, model='NULL')
+
+tn.exportDiffusionComparisonVideo(t_su, 'Model_su_diffusion.mp4', visual_style, steps = 200, initial_index=50)
+tn.exportDiffusionComparisonVideo(t_sd, 'Model_sd_diffusion.mp4', visual_style, steps = 200, initial_index=50)
 
 # Spectral analysis
 print('lambda_2(L_su) =', tn.AlgebraicConn(t_su))
